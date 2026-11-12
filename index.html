@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THOR | Personal Assistant</title>
+<style>
+:root {
+  --bg:#050c18; --panel:#0b1d32; --blue:#28baff;
+  --cyan:#8beaff; --text:#e5f7ff; --muted:#91aec4;
+  --border:rgba(56,189,248,.28);
+}
+* {box-sizing:border-box;margin:0;padding:0}
+body {
+  background:radial-gradient(ellipse at top right,#103452 0%,transparent 45%),var(--bg);
+  color:var(--text);font-family:Segoe UI,Arial,sans-serif;min-height:100vh;
+}
+button,input {font:inherit}
+.app {display:flex;min-height:100vh}
+aside {
+  width:235px;background:#040c18;padding:26px 17px;
+  border-right:1px solid var(--border);display:flex;flex-direction:column;gap:30px;
+}
+.logo {font-size:30px;font-weight:bold;letter-spacing:5px;color:var(--cyan);text-shadow:0 0 18px var(--blue);padding:0 10px}
+.logo small {display:block;font-size:9px;letter-spacing:3px;color:var(--muted);margin-top:5px}
+.menu-title {font-size:10px;color:#648ca7;letter-spacing:2px;margin:0 10px 12px}
+nav {display:grid;gap:8px}
+nav button {
+  padding:13px;text-align:left;color:#b4d0e1;background:transparent;
+  border:1px solid transparent;border-radius:9px;cursor:pointer;
+}
+nav button:hover,nav button.active {
+  color:white;background:#102c46;border-color:var(--border);
+  box-shadow:inset 3px 0 var(--blue);
+}
+.status {margin-top:auto;padding:14px;border:1px solid var(--border);border-radius:10px;color:var(--muted);font-size:12px;line-height:1.8}
+.dot {color:#43e8ac}
+main {flex:1;min-width:0;padding:28px 32px}
+header {display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:28px}
+.eyebrow {font-size:10px;color:var(--blue);letter-spacing:3px;margin-bottom:8px}
+h1 {font-size:30px;font-weight:600}
+.subtitle {font-size:13px;color:var(--muted);margin-top:7px}
+.clock {color:var(--cyan);border:1px solid var(--border);background:#0b2035;padding:11px;border-radius:9px;font-size:13px}
+.view {display:none;animation:appear .25s ease}
+.view.active {display:block}
+@keyframes appear {from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.hero {
+  padding:30px;border:1px solid var(--border);border-radius:16px;
+  background:linear-gradient(120deg,#0d3152,#071629);
+  box-shadow:0 0 30px #007bba18;margin-bottom:22px;
+}
+.hero h2 {font-size:25px;margin-bottom:10px}
+.hero p,.card p {color:var(--muted);font-size:13px;line-height:1.6}
+.section-title {font-size:11px;color:var(--cyan);letter-spacing:2px;margin:25px 0 13px}
+.grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card {background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:20px}
+.card h3 {font-size:16px;margin:10px 0 7px}
+.symbol {font-size:25px;color:var(--cyan)}
+.action {
+  border:1px solid #248bc0;background:#102f4a;color:var(--cyan);
+  padding:10px 14px;border-radius:8px;margin-top:14px;cursor:pointer;font-size:12px;
+}
+.action:hover {background:#164568}
+.searchbar {display:flex;gap:9px;margin:17px 0}
+input {
+  width:100%;min-width:0;padding:13px;color:white;background:#061426;
+  border:1px solid var(--border);border-radius:9px;outline:none;
+}
+input:focus {border-color:var(--blue)}
+.music-layout {display:grid;grid-template-columns:1.2fr .8fr;gap:15px}
+.now {
+  background:linear-gradient(145deg,#103653,#071629);
+  border:1px solid var(--border);border-radius:15px;padding:25px;text-align:center;
+}
+.album {
+  width:145px;height:145px;margin:0 auto 20px;border-radius:17px;
+  display:grid;place-items:center;font-size:55px;color:var(--cyan);
+  background:radial-gradient(circle,#17618c,#08172e 70%);
+  border:1px solid #54d6ff66;box-shadow:0 0 30px #28baff30;
+}
+.now h2 {font-size:20px;margin-bottom:7px}
+.now p {font-size:12px;color:var(--muted)}
+.track {height:4px;background:#29465c;border-radius:5px;margin:23px 0 8px}
+.track span {display:block;width:0;height:4px;background:var(--cyan);border-radius:5px}
+.controls {font-size:24px;color:var(--cyan);margin:18px}
+.playlist {display:grid;gap:9px}
+.playlist button {
+  text-align:left;padding:14px;border:1px solid var(--border);
+  background:#0c243c;color:var(--text);border-radius:9px;cursor:pointer;
+}
+.playlist button span {display:block;font-size:11px;color:var(--muted);margin-top:5px}
+.app-row {
+  display:flex;align-items:center;gap:13px;padding:15px;margin-bottom:10px;
+  background:var(--panel);border:1px solid var(--border);border-radius:11px;
+}
+.app-row .app-icon {font-size:23px}
+.app-row small {display:block;color:var(--muted);margin-top:4px}
+.app-row .action {margin:0 0 0 auto}
+.notice {margin-top:15px;padding:14px;border:1px solid var(--border);border-radius:10px;color:var(--muted);font-size:12px;line-height:1.6}
+footer {text-align:center;color:#52758e;font-size:10px;letter-spacing:2px;margin-top:35px}
+@media(max-width:750px) {
+  .app {display:block}
+  aside {width:100%;border-right:0;border-bottom:1px solid var(--border)}
+  nav {grid-template-columns:repeat(2,1fr)}
+  .status {display:none}
+  main {padding:20px 15px}
+  .grid,.music-layout {grid-template-columns:1fr}
+  header {align-items:flex-start}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<aside>
+  <div class="logo">THOR<small>PERSONAL ASSISTANT</small></div>
+  <div>
+    <div class="menu-title">CENTRO DE CONTROL</div>
+    <nav>
+      <button class="active" data-view="home">⌂ Inicio</button>
+      <button data-view="research">⌕ Investigación</button>
+      <button data-view="messages">▣ Aplicaciones</button>
+      <button data-view="music">♫ Música</button>
+      <button data-view="daily">✧ Vida cotidiana</button>
+    </nav>
+  </div>
+  <div class="status"><span class="dot">●</span> SISTEMA ACTIVO<br>THOR · Versión inicial</div>
+</aside>
+
+<main>
+<header>
+  <div>
+    <div class="eyebrow">INTERFAZ DE CONTROL · THOR SYSTEM</div>
+    <h1 id="page-title">Bienvenida a THOR</h1>
+    <p class="subtitle" id="page-subtitle">Tu centro personal de información y organización.</p>
+  </div>
+  <div class="clock" id="clock">--:--:--</div>
+</header>
+
+<section class="view active" id="home">
+  <div class="hero">
+    <div class="eyebrow">SISTEMA PRINCIPAL</div>
+    <h2>¿Qué hacemos hoy?</h2>
+    <p>THOR está preparado para ayudarte a investigar, organizar tus aplicaciones y resolver tareas cotidianas.</p>
+  </div>
+  <div class="section-title">TUS HERRAMIENTAS</div>
+  <div class="grid">
+    <div class="card"><div class="symbol">⌕</div><h3>Investigación</h3><p>Buscá personas, noticias, artículos e información.</p><button class="action" onclick="showView('research')">Explorar</button></div>
+    <div class="card"><div class="symbol">▣</div><h3>Mis aplicaciones</h3><p>Accedé al centro de tus aplicaciones personales.</p><button class="action" onclick="showView('messages')">Abrir centro</button></div>
+    <div class="card"><div class="symbol">♫</div><h3>THOR Music</h3><p>Encontrá canciones y abrí tus videos en YouTube.</p><button class="action" onclick="showView('music')">Ir a música</button></div>
+    <div class="card"><div class="symbol">✧</div><h3>Vida cotidiana</h3><p>Ideas, organización y ayuda práctica para tu día.</p><button class="action" onclick="showView('daily')">Consultar</button></div>
+  </div>
+</section>
+
+<section class="view" id="research">
+  <div class="hero"><div class="eyebrow">CENTRO DE INVESTIGACIÓN</div><h2>¿Qué querés investigar?</h2><p>Buscá información en la web. Los resultados se abrirán en una nueva pestaña.</p></div>
+  <form class="searchbar" onsubmit="searchWeb(event)">
+    <input id="research-input" placeholder="Persona, noticia, tema o artículo..." required>
+    <button class="action">Buscar</button>
+  </form>
+  <div class="notice">Esta primera versión utiliza búsquedas web externas. Más adelante podremos añadir resultados organizados, fuentes y fotografías.</div>
+</section>
+
+<section class="view" id="messages">
+  <div class="hero"><div class="eyebrow">CENTRO DE APLICACIONES</div><h2>Tus conexiones</h2><p>Accesos a tus servicios favoritos. Las conexiones privadas requieren autorización oficial.</p></div>
+  <div class="app-row"><div class="app-icon">♪</div><div><strong>TikTok</strong><small>Acceso a la plataforma</small></div><button class="action" onclick="openSite('https://www.tiktok.com/')">Abrir</button></div>
+  <div class="app-row"><div class="app-icon">◎</div><div><strong>Instagram</strong><small>Acceso a la plataforma</small></div><button class="action" onclick="openSite('https://www.instagram.com/')">Abrir</button></div>
+  <div class="app-row"><div class="app-icon">✉</div><div><strong>Gmail</strong><small>Acceso a tu correo</small></div><button class="action" onclick="openSite('https://mail.google.com/')">Abrir</button></div>
+  <div class="app-row"><div class="app-icon">▶</div><div><strong>YouTube</strong><small>Música y videos</small></div><button class="action" onclick="openSite('https://www.youtube.com/')">Abrir</button></div>
+  <div class="notice">Importante: estos botones abren las aplicaciones. Todavía no leen mensajes ni correos. Para eso necesitaremos integraciones oficiales y permisos seguros. Nunca escribas tus contraseñas en esta página.</div>
+</section>
+
+<section class="view" id="music">
+  <div class="hero"><div class="eyebrow">THOR MUSIC SYSTEM</div><h2>Tu espacio musical</h2><p>Buscá canciones, descubrí videos y guardá tus listas favoritas.</p></div>
+  <div class="music-layout">
+    <div class="now">
+      <div class="album">♫</div>
+      <h2 id="song-title">AHORA SUENA</h2>
+      <p id="song-artist">Seleccioná una canción para buscarla</p>
+      <div class="track"><span></span></div>
+      <div class="controls">⏮　▶　⏭</div>
+      <button class="action" onclick="openSite('https://www.youtube.com/')">ABRIR YOUTUBE</button>
+    </div>
+    <div class="card">
+      <div class="section-title">BUSCAR EN YOUTUBE</div>
+      <form class="searchbar" onsubmit="searchMusic(event)">
+        <input id="music-input" placeholder="Canción o artista..." required>
+        <button class="action">Ir</button>
+      </form>
+      <div class="section-title">MIS LISTAS</div>
+      <div class="playlist">
+        <button onclick="chooseList('Favoritas')">♡ Favoritas<span>Tu colección musical</span></button>
+        <button onclick="chooseList('Trueno')">♫ Trueno<span>Tu artista favorito</span></button>
+        <button onclick="chooseList('Para estudiar')">▤ Para estudiar<span>Música para concentrarte</span></button>
+        <button onclick="chooseList('Descubrimientos')">✧ Descubrimientos<span>Nuevas canciones</span></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="view" id="daily">
+  <div class="hero"><div class="eyebrow">ASISTENTE PERSONAL</div><h2>Vida cotidiana</h2><p>Un espacio para resolver dudas, organizar ideas y encontrar soluciones.</p></div>
+  <div class="card">
+    <h3>¿En qué puedo ayudarte?</h3>
+    <p>Podés usar estas herramientas para abrir una búsqueda y encontrar información práctica.</p>
+    <form class="searchbar" onsubmit="searchDaily(event)">
+      <input id="daily-input" placeholder="Escribí lo que necesitás..." required>
+      <button class="action">Consultar</button>
+    </form>
+  </div>
+  <div class="notice">El asistente inteligente con respuestas propias se incorporará en una siguiente etapa.</div>
+</section>
+
+<footer>THOR SYSTEM · PERSONAL CONTROL INTERFACE · 2026</footer>
+</main>
+</div>
+
+<script>
+const titles = {
+  home:["Bienvenida a THOR","Tu centro personal de información y organización."],
+  research:["Centro de investigación","Buscá información y descubrí nuevos temas."],
+  messages:["Mis aplicaciones","Tus plataformas en un solo lugar."],
+  music:["THOR Music","Tu espacio personal para descubrir música."],
+  daily:["Vida cotidiana","Ideas, organización y ayuda práctica."]
+};
+
+function showView(id) {
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===id));
+  document.getElementById(id).classList.add("active");
+  document.getElementById("page-title").textContent=titles[id][0];
+  document.getElementById("page-subtitle").textContent=titles[id][1];
+}
+
+document.querySelectorAll("nav button").forEach(button=>{
+  button.addEventListener("click",()=>showView(button.dataset.view));
+});
+
+function openSite(url) { window.open(url,"_blank","noopener,noreferrer"); }
+
+function searchWeb(event) {
+  event.preventDefault();
+  const q=document.getElementById("research-input").value.trim();
+  if(q) openSite("https://www.google.com/search?q="+encodeURIComponent(q));
+}
+
+function searchMusic(event) {
+  event.preventDefault();
+  const q=document.getElementById("music-input").value.trim();
+  if(q) {
+    document.getElementById("song-title").textContent=q;
+    document.getElementById("song-artist").textContent="Resultados de búsqueda en YouTube";
+    openSite("https://www.youtube.com/results?search_query="+encodeURIComponent(q));
+  }
+}
+
+function searchDaily(event) {
+  event.preventDefault();
+  const q=document.getElementById("daily-input").value.trim();
+  if(q) openSite("https://www.google.com/search?q="+encodeURIComponent(q));
+}
+
+function chooseList(name) {
+  document.getElementById("music-input").value=name;
+  document.getElementById("song-title").textContent=name;
+  document.getElementById("song-artist").textContent="Lista seleccionada";
+}
+
+function updateClock() {
+  document.getElementById("clock").textContent=new Date().toLocaleTimeString("es-SV");
+}
+updateClock();
+setInterval(updateClock,1000);
+</script>
+</body>
+</html>
